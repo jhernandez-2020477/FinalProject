@@ -1,0 +1,763 @@
+{
+	"info": {
+		"_postman_id": "89d18ea3-1773-43c7-88ef-f24f2c7a7b0f",
+		"name": "StoreOnline",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37951911"
+	},
+	"item": [
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "registerCategory",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Linea Blanca",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Productos para el hogar",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3626/v1/category/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"v1",
+								"category",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updatedCategory",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Linea Update",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Descripcion update",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3626/v1/category/67af4a5dbe418a8aba47a221",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"v1",
+								"category",
+								"67af4a5dbe418a8aba47a221"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteCategory",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://localhost:3626/v1/category/67af715e02fcf8ba884ac55c",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"v1",
+								"category",
+								"67af715e02fcf8ba884ac55c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllCategories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3626/getCategories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"getCategories"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "registerProduct",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Lavadora",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Lavadora marca LG",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "5200",
+									"type": "text"
+								},
+								{
+									"key": "stock",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "67af6fcb27482d9a0b5cc3fb",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3626/v1/product/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"v1",
+								"product",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateProduct",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Lavadora actualizada",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Ideal para todos",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "5000",
+									"type": "text"
+								},
+								{
+									"key": "stock",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "67ad78db33dc67b16b1e6335",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3626/v1/product/67ad7b8b4244f5a2f013961d",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"v1",
+								"product",
+								"67ad7b8b4244f5a2f013961d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteProduct",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": []
+						},
+						"url": {
+							"raw": "http://localhost:3626/v1/product/67af4e54be418a8aba47a24b",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"v1",
+								"product",
+								"67af4e54be418a8aba47a24b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllProducts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3626/getProducts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"getProducts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getProductId",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3626/v1/product/67af4df9be418a8aba47a246",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"v1",
+								"product",
+								"67af4df9be418a8aba47a246"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "ADMIN",
+					"item": [
+						{
+							"name": "updateRole",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "role",
+											"value": "client",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3626/v1/user/67af4566be418a8aba47a219",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3626",
+									"path": [
+										"v1",
+										"user",
+										"67af4566be418a8aba47a219"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateUser",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Pablo Andres",
+											"type": "text"
+										},
+										{
+											"key": "surname",
+											"value": "Hernández Godínez",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3626/v1/user/update/67ad7703c12c09c25d9727cc",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3626",
+									"path": [
+										"v1",
+										"user",
+										"update",
+										"67ad7703c12c09c25d9727cc"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteUser",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "password",
+											"value": "1024578@Vv",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3626/v1/user/67b02ad188e226804b8d075b",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3626",
+									"path": [
+										"v1",
+										"user",
+										"67b02ad188e226804b8d075b"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "CLIENT",
+					"item": [
+						{
+							"name": "updateUser",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "Pablo Andres",
+											"type": "text"
+										},
+										{
+											"key": "surname",
+											"value": "Hernández Godínez",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3626/v1/user/update/67ad7703c12c09c25d9727cc",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3626",
+									"path": [
+										"v1",
+										"user",
+										"update",
+										"67ad7703c12c09c25d9727cc"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteUser",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "password",
+											"value": "1024578@Vv",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:3626/v1/user/67b02ad188e226804b8d075b",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3626",
+									"path": [
+										"v1",
+										"user",
+										"67b02ad188e226804b8d075b"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "updatePassword",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "currentPassword",
+									"value": "1024578@Vv",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "1024578@Vv0412",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3626/v1/user/password/67ad66b12ed97f8c44c9debe",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"v1",
+								"user",
+								"password",
+								"67ad66b12ed97f8c44c9debe"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllUsers",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "password",
+									"value": "1024578@Vv",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3626/v1/user/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3626",
+							"path": [
+								"v1",
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "Juan",
+							"type": "text"
+						},
+						{
+							"key": "surname",
+							"value": "Hernández",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "jhernandez",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "jhernan@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "1024578@Vv",
+							"type": "text"
+						},
+						{
+							"key": "direction",
+							"value": "13 calle 7-29 zona 7 de mixco belén",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "38121441",
+							"type": "text"
+						},
+						{
+							"key": "profilePicture",
+							"type": "file",
+							"src": "/C:/Users/hgjua/Downloads/FinalProject/uploads/img/users/images.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3626/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3626",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var data = JSON.parse(responseBody);\r",
+							"postman.setGlobalVariable(\"token\", data.token)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "userLoggin",
+							"value": "jhernan@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "1024578@Vv",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3626/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3626",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
