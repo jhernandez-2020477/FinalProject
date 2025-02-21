@@ -2,6 +2,41 @@
 import Category from '../category/category.model.js'
 import Product from '../product/product.model.js'
 
+//Crear categoria por defecto
+export const initCategory = async(req, res) => {
+    try {
+        // Verificar si ya existe una categoria con ese nombre
+        let defaultCate = await Category.findOne(
+            { 
+                name: 'Category Default' 
+            }
+        )
+        
+        if (!defaultCate) {
+            const categoryData = {
+                name: 'Category Default',
+                description: 'Esta es una categoria que engloba todas las demás'
+            }
+
+            let newCategory = new Category(categoryData)
+            await newCategory.save();
+            
+            console.log('Category created successfully!')
+        } else {
+            //console.log('Category already exists!')
+        }
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send(
+            {
+                message: 'Error creating Default Category', 
+                err
+            }
+        )
+    }
+}
+
+
 //Crear Producto
 export const categoryRegister = async(req, res)=>{
     try{
@@ -96,10 +131,12 @@ export const update = async(req, res)=>{
 
 
 
-//Eliminar Categoria y actualizar 
+// Eliminar Categoria y actualizar productos
 export const deleteCategory = async (req, res) => {
     try {
         const { id } = req.params
+        
+        // Buscar la categoría a eliminar
         const category = await Category.findById(id)
         if (!category) {
             return res.status(404).send(
@@ -109,17 +146,14 @@ export const deleteCategory = async (req, res) => {
                 }
             )
         }
- 
-        // Buscar una categoría por defecto
+
+        // Buscar la categoría por defecto
         let defaultCategory = await Category.findOne(
             { 
-                name: 'Uncategorized' 
+                name: 'Category Default' 
             }
         )
-        if (!defaultCategory) {
-            defaultCategory = await Category.findOne()
-        }
- 
+        
         if (!defaultCategory) {
             return res.status(400).send(
                 {
@@ -128,18 +162,18 @@ export const deleteCategory = async (req, res) => {
                 }
             )
         }
- 
+
         // Actualizar los productos que pertenecen a la categoría eliminada
         const updatedProducts = await Product.updateMany(
             { category: id },
             { $set: { category: defaultCategory._id } }
         )
- 
+
         console.log(`Updated ${updatedProducts.modifiedCount} products to category ${defaultCategory._id}`)
- 
+
         // Eliminar la categoría
         await Category.findByIdAndDelete(id)
- 
+
         return res.send(
             {
                 success: true,

@@ -1,5 +1,7 @@
 //Conexion a la DB
 import mongoose from "mongoose";
+import { initCategory } from '../src/category/category.controller.js'
+
 
 export const connect = async()=>{
     try {
@@ -15,6 +17,10 @@ export const connect = async()=>{
         })
         mongoose.connection.once('open',()=>{
             console.log("MongoDB | connected to database")
+        })
+        mongoose.connection.once('open', () => {
+            //console.log("MongoDB | Category created");
+            initCategory()
         })
         mongoose.connection.on('reconnected',()=>{
             console.log("MongoDB | reconnected to mongodb")
