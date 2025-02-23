@@ -6,7 +6,7 @@ const cartSchema = Schema(
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
-            required: [true, 'Usuario is required']
+            //required: [true, 'Usuario is required']
         },
         products: [
             {
@@ -21,8 +21,12 @@ const cartSchema = Schema(
                     min: 1
                 }
             }
-        ]
+        ],
+        totalPrice: {
+            type: Number,
+            default: 0
+        }
     }
 )
 //Exportar y crear el modelo
-export default cart('Cart', cartSchema)
+export default model('Cart', cartSchema)

@@ -11,6 +11,7 @@ import authRoutes from '../src/auth/auth.routes.js'
 import categoryRoutes from '../src/category/category.routes.js'
 import productRoutes from '../src/product/product.routes.js'
 import userRoutes from '../src/user/user.routes.js'
+import cartRoutes from '../src/cart/cart.routes.js'
 import { limiter } from '../middlewares/rate.limit.js'
 
 const configs = (app )=>{
@@ -37,6 +38,9 @@ const routes = (app)=>{
 
     //Categoria
     app.use('/v1/category', categoryRoutes)
+
+    //Carrito
+    app.use('/v1/cart', cartRoutes)
 }
 
 export const initServer = async()=>{
