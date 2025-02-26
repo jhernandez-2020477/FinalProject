@@ -173,3 +173,20 @@ export const validUpdateClient = [
         .isMobilePhone(),
     validateErrors
 ]
+
+//CARRITO
+export const validAddProductToCart = [
+    body('product', 'Product cannot be empty')
+        .notEmpty(),
+    body('amount', 'Amount cannot be empty')
+        .notEmpty(),
+        validateErrorWithoutImg
+]
+
+export const validUpdateProductToCart = [
+    body('product', 'Product cannot be empty')
+        .optional(),
+    body('amount', 'Amount cannot be empty')
+        .optional(),
+        validateErrorWithoutImg
+]
