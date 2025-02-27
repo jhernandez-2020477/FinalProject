@@ -25,6 +25,10 @@ const cartSchema = Schema(
         totalPrice: {
             type: Number,
             default: 0
+        },
+        status: {
+            type: String,
+            default: 'INCOMPLETE'
         }
     }
 )
