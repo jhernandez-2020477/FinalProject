@@ -27,6 +27,7 @@ const invoiceSchema = Schema(
         ],
         total: {
             type: Number,
+            default: 0
             //required: [true, 'Total is required']
         },
         date: {
@@ -36,4 +37,4 @@ const invoiceSchema = Schema(
     }
 )
 //Crear y exportar el modelo
-export default invoice('Invoice', invoiceSchema)
+export default model('Invoice', invoiceSchema)
