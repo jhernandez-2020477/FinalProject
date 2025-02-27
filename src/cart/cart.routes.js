@@ -1,6 +1,6 @@
 //Rutas de Carrito
 import { Router } from "express";
-import { addProductToCart, deleteProductInCart, updateProductInCart } from "./cart.controller.js";
+import { addProductToCart, completePurchase, deleteProductInCart, updateProductInCart } from "./cart.controller.js";
 import { validateJwt } from "../../middlewares/validate.jwt.js";
 import { validAddProductToCart, validUpdateProductToCart } from "../../helpers/validators.js";
 
@@ -30,6 +30,14 @@ api.delete(
         validateJwt
     ],
     deleteProductInCart
+)
+
+api.post(
+    '/completePurchase',
+    [
+        validateJwt
+    ],
+    completePurchase
 )
 
 //Exporta
