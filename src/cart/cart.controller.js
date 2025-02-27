@@ -1,6 +1,7 @@
 //Lógica de Carrito
 import Cart from '../cart/cart.model.js'
 import Product from '../product/product.model.js'
+import Invoice from '../invoice/invoice.model.js'
 
 // Agregar Producto
 export const addProductToCart = async (req, res) => {
@@ -38,11 +39,17 @@ export const addProductToCart = async (req, res) => {
                 {
                     user: userId,
                     products: [{ product, amount }],
-                    totalPrice: productFound.price * amount
+                    totalPrice: productFound.price * amount,
+                    status: 'INCOMPLETE'
                 }
             )
             await cart.save()
         } else {
+            // Si el carrito está en estado COMPLETED, cambiarlo a INCOMPLETE
+            if (cart.status === 'COMPLETE') {
+                cart.status = 'INCOMPLETE'
+            }
+
             // Verificar si el producto ya existe en el carrito
             const existingProduct = cart.products.find(item => item.product.toString() === product)
             if (existingProduct) {
@@ -250,6 +257,93 @@ export const deleteProductInCart = async(req, res) => {
                 success: false,
                 message: 'General Error deleting product in cart',
                 err
+            }
+        )
+    }
+}
+
+//Completar el proceso de compra
+export const completePurchase = async (req, res) => {
+    try {
+        const userId = req.user.uid
+
+        // Verificar si el carrito existe para el usuario
+        let cart = await Cart.findOne({ user: userId })
+        if (!cart) {
+            return res.status(404).send(
+                {
+                    success: false,
+                    message: 'Cart not found for the user.'
+                }
+            )
+        }
+
+        // Verificar si el carrito ya está completado
+        if (cart.status === 'COMPLETE') {
+            return res.status(400).send(
+                {
+                    success: false,
+                    message: 'The cart is already completed.'
+                }
+            )
+        }
+
+        // Cambiar el estado del carrito a "COMPLETE"
+        cart.status = 'COMPLETE'
+
+        // Crear la factura basada en el carrito
+        const invoiceItems = []
+
+        // Iterar sobre los productos del carrito para obtener los detalles
+        for (const item of cart.products) {
+            const product = await Product.findById(item.product)
+            if (!product) {
+                return res.status(400).send(
+                    {
+                        success: false,
+                        message: 'Product not found in cart.'
+                    }
+                )
+            }
+            const price = product.price * item.amount
+            invoiceItems.push({
+                product: item.product,
+                amount: item.amount,
+                price: price
+            })
+        }
+
+        // Crear la factura
+        const invoice = new Invoice({
+            user: userId, 
+            products: invoiceItems, 
+            total: cart.totalPrice, 
+            date: new Date()  
+        })
+
+        // Guardar la factura
+        await invoice.save()
+
+        // Vaciar el carrito 
+        cart.products = []
+        cart.totalPrice = 0
+        await cart.save()
+
+        return res.send(
+            {
+                success: true,
+                message: 'Purchase completed successfully.',
+                invoice  
+            }
+        )
+
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send(
+            {
+                success: false,
+                message: 'Error completing purchase.',
+                error: err.message
             }
         )
     }
