@@ -174,3 +174,84 @@ export const updateProductInCart = async (req, res) => {
         )
     }
 }
+
+//Eliminar el producto
+export const deleteProductInCart = async(req, res) => {
+    try {
+        const { product } = req.body
+        const userId = req.user.uid
+
+        // Verificar si el carrito existe para el usuario
+        let cart = await Cart.findOne({ user: userId })
+        if (!cart) {
+            return res.status(404).send(
+                {
+                    success: false,
+                    message: 'Cart not found for the user.'
+                }
+            )
+        }
+
+        // Verificar si el producto está en el carrito
+        const productInCartIndex = cart.products.findIndex(item => item.product.toString() === product)
+        if (productInCartIndex === -1) {
+            return res.status(404).send(
+                {
+                    success: false,
+                    message: 'Product not found in your cart.'
+                }
+            )
+        }
+
+        // Obtener el producto de la base de datos
+        const productFound = await Product.findById(product)
+        if (!productFound) {
+            return res.status(400).send(
+                {
+                    success: false,
+                    message: 'Product not found :('
+                }
+            )
+        }
+
+        // Obtener la cantidad del producto para regresarlo al stock
+        const previousAmount = cart.products[productInCartIndex].amount
+        console.log(previousAmount)
+
+        // Actualizar el stock del producto
+        productFound.stock += previousAmount
+        await productFound.save()
+
+        // Eliminar el producto del carrito
+        cart.products.splice(productInCartIndex, 1)
+
+        // Actualizar el precio total en el carrito
+        const productDetails = await Promise.all(
+            cart.products.map(async (item) => {
+                const product = await Product.findById(item.product)
+                return product.price * item.amount
+            })
+        )
+        cart.totalPrice = productDetails.reduce((total, price) => total + price, 0)
+
+        await cart.save()
+
+        return res.send(
+            {
+                success: true,
+                message: 'Product deleted successfully.',
+                cart
+            }
+        )
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send(
+            {
+                success: false,
+                message: 'General Error deleting product in cart',
+                err
+            }
+        )
+    }
+}
+
