@@ -25,6 +25,10 @@ const invoiceSchema = Schema(
                 }
             }
         ],
+        subTotal: {
+            type: Number,
+            default: 0
+        },
         total: {
             type: Number,
             default: 0
