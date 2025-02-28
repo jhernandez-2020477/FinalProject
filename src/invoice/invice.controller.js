@@ -58,7 +58,6 @@ export const updateProductInInvoice = async(req, res) => {
         // Calcular la diferencia entre la cantidad anterior y la nueva cantidad
         const previousAmount = productInInvoice.amount
         const stockDifference = newAmount - previousAmount
-        
         // Verificar si hay suficiente stock disponible para la nueva cantidad
         if (productFound.stock - stockDifference < 0) {
             return res.status(400).send(
@@ -85,10 +84,21 @@ export const updateProductInInvoice = async(req, res) => {
                 return product.price * item.amount
             })
         )
-        invoice.total = productDetails.reduce((total, price) => total + price, 0)
+        const subTotal = productDetails.reduce((total, price) => total + price, 0)
+        
+        
+        // Calcular el IVA (12%)
+        const iva = subTotal * 0.12
 
+        // Calcular el total incluyendo IVA
+        const total = subTotal + iva
+
+        // Actualizar los campos subTotal y total en la factura
+        invoice.subTotal = subTotal
+        invoice.total = total
+
+        // Guardar la factura con los nuevos valores
         await invoice.save()
-
         return res.send(
             {
                 success: true,
