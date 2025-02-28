@@ -201,7 +201,6 @@ export const getProductByName = async(req, res)=>{
                 {
                     success: false,
                     message: 'No Products found with that name',
-                    err
                 }
             )
         }
@@ -229,7 +228,13 @@ export const getSellingProducts = async (req, res) => {
     try {
         const products = await Product.find()
             .sort({ sales: -1 })
-            .limit(10); 
+            .limit(10)
+            .populate(
+                {
+                    path: 'category',
+                    select: 'name description -_id'
+                }
+            )
         if(products.length === 0){
             return res.status(400).send(
                 {

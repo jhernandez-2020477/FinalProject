@@ -286,7 +286,7 @@ export const getAll = async(req, res)=>{
 // Obtener historial de compras de un usuario
 export const getPurchaseHistory = async (req, res) => {
     try {
-        const userId = req.user.uid  // Supongo que tienes un middleware que adjunta el userId al req.user
+        const userId = req.user.uid  
 
         // Verificar si el usuario existe
         const user = await User.findById(userId)
@@ -299,32 +299,46 @@ export const getPurchaseHistory = async (req, res) => {
 
         // Obtener las facturas asociadas al usuario, con populate para obtener los detalles de los productos
         const invoices = await Invoice.find({ user: userId })
-            .populate({
-                path: 'products.product',
-                select: 'name price -_id'  // Trae solo el nombre y el precio del producto
-            })
-            .exec()
+            .populate(
+                {
+                    path: 'user',
+                    select: 'name -_id'
+                }
+            )
+            .populate(
+                {
+                    path: 'products.product',
+                    select: 'name price -_id'  
+                }
+            )
+
 
         if (!invoices || invoices.length === 0) {
-            return res.status(404).send({
-                success: false,
-                message: 'No purchase history found.'
-            })
+            return res.status(404).send(
+                {
+                    success: false,
+                    message: 'No purchase history found.'
+                }
+            )
         }
 
-        return res.send({
-            success: true,
-            message: 'Purchase history retrieved successfully.',
-            invoices
-        })
+        return res.send(
+            {
+                success: true,
+                message: 'Purchase history retrieved successfully.',
+                invoices
+            }
+        )
 
     } catch (err) {
         console.error(err)
-        return res.status(500).send({
-            success: false,
-            message: 'Error retrieving purchase history.',
-            err
-        })
+        return res.status(500).send(
+            {
+                success: false,
+                message: 'Error retrieving purchase history.',
+                err
+            }
+        )
     }
 }
 
