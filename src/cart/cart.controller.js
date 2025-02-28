@@ -311,6 +311,9 @@ export const completePurchase = async (req, res) => {
                 amount: item.amount,
                 price: price
             })
+            // Incrementar las ventas del producto
+            product.sales += item.amount
+            await product.save() 
         }
 
         // Crear la factura

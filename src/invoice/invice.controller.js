@@ -1,5 +1,4 @@
 //Lógica de la factura
-import { selectFields } from 'express-validator/lib/field-selection.js'
 import Invoice from '../invoice/invoice.model.js'
 import Product from '../product/product.model.js'
 import User from '../user/user.model.js'
@@ -59,8 +58,7 @@ export const updateProductInInvoice = async(req, res) => {
         // Calcular la diferencia entre la cantidad anterior y la nueva cantidad
         const previousAmount = productInInvoice.amount
         const stockDifference = newAmount - previousAmount
-        console.log(stockDifference)
-
+        
         // Verificar si hay suficiente stock disponible para la nueva cantidad
         if (productFound.stock - stockDifference < 0) {
             return res.status(400).send(
