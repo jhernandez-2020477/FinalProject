@@ -1,6 +1,7 @@
 //Lógica del User
 import { checkPassword, encrypt} from '../../utils/encrypt.js'
 import User from '../user/user.model.js'
+import Invoice from  '../invoice/invoice.model.js'
 
 //Editar Rol solo ADMIN puede hacerlo
 export const updateUserRole = async(req, res)=>{
@@ -282,4 +283,48 @@ export const getAll = async(req, res)=>{
     }
 }
 
+// Obtener historial de compras de un usuario
+export const getPurchaseHistory = async (req, res) => {
+    try {
+        const userId = req.user.uid  // Supongo que tienes un middleware que adjunta el userId al req.user
+
+        // Verificar si el usuario existe
+        const user = await User.findById(userId)
+        if (!user) {
+            return res.status(404).send({
+                success: false,
+                message: 'User not found.'
+            })
+        }
+
+        // Obtener las facturas asociadas al usuario, con populate para obtener los detalles de los productos
+        const invoices = await Invoice.find({ user: userId })
+            .populate({
+                path: 'products.product',
+                select: 'name price -_id'  // Trae solo el nombre y el precio del producto
+            })
+            .exec()
+
+        if (!invoices || invoices.length === 0) {
+            return res.status(404).send({
+                success: false,
+                message: 'No purchase history found.'
+            })
+        }
+
+        return res.send({
+            success: true,
+            message: 'Purchase history retrieved successfully.',
+            invoices
+        })
+
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send({
+            success: false,
+            message: 'Error retrieving purchase history.',
+            err
+        })
+    }
+}
 

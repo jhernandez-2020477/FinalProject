@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { deleteUser, getAll, updatePassword, updateUser,  updateUserRole } from "./user.controller.js";
+import { deleteUser, getAll, getPurchaseHistory, updatePassword, updateUser,  updateUserRole } from "./user.controller.js";
 import { isAdmin, validateJwt } from "../../middlewares/validate.jwt.js";
 import { validUpdatePassword, validUpdateRole, validUpdateUser } from "../../helpers/validators.js";
 
@@ -56,6 +56,15 @@ api.put(
         validUpdatePassword
     ],
     updatePassword
+)
+
+//Listar un historia de compras
+api.get(
+    '/getHistorial',
+    [
+        validateJwt
+    ],
+    getPurchaseHistory
 )
 
 
