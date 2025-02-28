@@ -320,7 +320,8 @@ export const completePurchase = async (req, res) => {
         const invoice = new Invoice({
             user: userId, 
             products: invoiceItems, 
-            total: cart.totalPrice, 
+            subTotal: cart.totalPrice,
+            total: (cart.totalPrice) + cart.totalPrice * 0.12 , 
             date: new Date()  
         })
 
