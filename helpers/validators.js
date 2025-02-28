@@ -186,7 +186,7 @@ export const validAddProductToCart = [
 export const validUpdateProductToCart = [
     body('product', 'Product cannot be empty')
         .notEmpty(),
-    body('amount', 'Amount cannot be empty')
+    body('newAmount', 'Amount cannot be empty')
         .notEmpty(),
         validateErrorWithoutImg
 ]
@@ -195,7 +195,7 @@ export const validUpdateProductToCart = [
 export const validUpdateInvoice = [
     body('product', 'Product cannot be empty')
         .notEmpty(),
-    body('amount', 'Amount cannot be empty')
+    body('newAmount', 'Amount cannot be empty')
         .notEmpty(),
         validateErrorWithoutImg
 ]
