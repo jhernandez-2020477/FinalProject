@@ -143,7 +143,7 @@ export const deleteUser = async (req, res) => {
         }
 
         //Si el usuario se está eliminando a sí mismo, validar la contraseña
-        if (admiUser.uid === id) {
+        if (adminUser.uid === id) {
             if (!password) {
                 return res.status(400).send(
                     {
