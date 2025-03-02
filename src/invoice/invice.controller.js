@@ -3,8 +3,8 @@ import Invoice from '../invoice/invoice.model.js'
 import Product from '../product/product.model.js'
 import User from '../user/user.model.js'
 
-//Editar Factura
-export const updateProductInInvoice = async(req, res) => {
+// Editar Factura
+export const updateProductInInvoice = async (req, res) => {
     try {
         const { product, newAmount } = req.body
         const { id } = req.params
@@ -12,7 +12,7 @@ export const updateProductInInvoice = async(req, res) => {
 
         // Verificar si el usuario es ADMIN
         const user = await User.findById(userId)
-        if (!user || user.role !== 'ADMIN') {
+        if(!user || user.role !== 'ADMIN'){
             return res.status(403).send(
                 {
                     success: false,
@@ -23,8 +23,7 @@ export const updateProductInInvoice = async(req, res) => {
 
         // Verificar si la factura existe
         let invoice = await Invoice.findById(id)
-        console.log(invoice)
-        if (!invoice) {
+        if(!invoice){
             return res.status(404).send(
                 {
                     success: false,
@@ -35,18 +34,18 @@ export const updateProductInInvoice = async(req, res) => {
 
         // Verificar si el producto está en la factura
         const productInInvoice = invoice.products.find(item => item.product.toString() === product)
-        if (!productInInvoice) {
+        if(!productInInvoice){
             return res.status(404).send(
                 {
                     success: false,
-                    message: 'Product not found in this Invoice.'
+                    message: 'Product not found in this invoice.'
                 }
             )
         }
 
         // Obtener el producto de la base de datos
         const productFound = await Product.findById(product)
-        if (!productFound) {
+        if(!productFound){
             return res.status(400).send(
                 {
                     success: false,
@@ -58,47 +57,39 @@ export const updateProductInInvoice = async(req, res) => {
         // Calcular la diferencia entre la cantidad anterior y la nueva cantidad
         const previousAmount = productInInvoice.amount
         const stockDifference = newAmount - previousAmount
-        // Verificar si hay suficiente stock disponible para la nueva cantidad
-        if (productFound.stock - stockDifference < 0) {
+
+        // Verificar si hay suficiente stock disponible
+        if(productFound.stock - stockDifference < 0){
             return res.status(400).send(
                 {
                     success: false,
-                    message: 'Not enough stock available for the new quantity.'
+                    message: `Not enough stock available for the new quantity. Available stock is: ${productFound.stock}`
                 }
             )
         }
 
-        // Actualizar el stock del producto
-        // Si la cantidad disminuye en la factura, sumamos la diferencia al stock
-        // Si la cantidad aumenta, restamos la diferencia al stock
+        // Actualizar el stock y las ventas del producto
         productFound.stock -= stockDifference
+        productFound.sales += stockDifference // Aqui va a incrementar o disminuyir las ventas según la diferencia
         await productFound.save()
 
-        // Actualizar la cantidad del producto en la factura
+        // Actualizar la cantidad y el precio en la factura
         productInInvoice.amount = newAmount
+        productInInvoice.price = productFound.price * newAmount
 
-        // Actualizar el precio total en la factura
-        const productDetails = await Promise.all(
-            invoice.products.map(async (item) => {
-                const product = await Product.findById(item.product)
-                return product.price * item.amount
-            })
-        )
-        const subTotal = productDetails.reduce((total, price) => total + price, 0)
-        
-        
-        // Calcular el IVA (12%)
+        // Recalcular el subTotal de la factura
+        const subTotal = invoice.products.reduce((total, item) => total + item.price, 0)
+
+        // Calcular el IVA (12%) y el total
         const iva = subTotal * 0.12
-
-        // Calcular el total incluyendo IVA
         const total = subTotal + iva
 
-        // Actualizar los campos subTotal y total en la factura
+        // Actualizar la factura
         invoice.subTotal = subTotal
         invoice.total = total
 
-        // Guardar la factura con los nuevos valores
         await invoice.save()
+
         return res.send(
             {
                 success: true,
