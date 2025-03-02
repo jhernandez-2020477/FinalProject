@@ -67,10 +67,6 @@ export const addProductToCart = async (req, res) => {
             await cart.save()
         }
 
-        // Restar la cantidad del producto al stock
-        productFound.stock -= amount
-        await productFound.save() // Guardar los cambios en el producto
-
         return res.send(
             {
                 success: true,
@@ -129,25 +125,22 @@ export const updateProductInCart = async (req, res) => {
             )
         }
 
-        // Calcular la diferencia entre la cantidad anterior y la nueva
-        const previousAmount = productInCart.amount // Cantidad anterior en el carrito
-        const stockDifference = newAmount - previousAmount // Diferencia entre la nueva y la anterior cantidad
-        console.log(stockDifference)
-        // Verificar si hay suficiente stock disponible para la nueva cantidad
-        if (productFound.stock - stockDifference < 0) {
+        const previousAmount = productInCart.amount; // Cantidad anterior en el carrito
+
+        console.log(`Stock actual: ${productFound.stock}`)
+        console.log(`Cantidad anterior en el carrito: ${previousAmount}`)
+        console.log(`Stock disponible: ${productFound.stock}`)
+        console.log(`Nueva cantidad solicitada: ${newAmount}`)
+
+        // Verificar si la nueva cantidad supera el stock disponible
+        if (newAmount > productFound.stock) {
             return res.status(400).send(
                 {
                     success: false,
-                    message: 'Not enough stock available for the new quantity.'
+                    message: `Not enough stock available. Only ${productFound.stock} left in stock.`
                 }
             )
         }
-
-        // Actualizar el stock del producto: 
-        // Si la cantidad disminuye en el carrito, sumamos la diferencia al stock.
-        // Si la cantidad aumenta, restamos la diferencia del stock.
-        productFound.stock -= stockDifference
-        await productFound.save() // Guardar el cambio en el stock
 
         // Actualizar la cantidad del producto en el carrito
         productInCart.amount = newAmount
@@ -221,12 +214,6 @@ export const deleteProductInCart = async(req, res) => {
             )
         }
 
-        // Obtener la cantidad del producto para regresarlo al stock
-        const previousAmount = cart.products[productInCartIndex].amount
-        console.log(previousAmount)
-
-        // Actualizar el stock del producto
-        productFound.stock += previousAmount
         await productFound.save()
 
         // Eliminar el producto del carrito
@@ -305,25 +292,40 @@ export const completePurchase = async (req, res) => {
                     }
                 )
             }
+
+            // Verificar stock antes de confirmar compra
+            if (product.stock < item.amount) {
+                return res.status(400).send(
+                    {
+                        success: false,
+                        message: `Not enough stock available for product ${product.name}.`
+                    }
+                )
+            }
+
             const price = product.price * item.amount
-            invoiceItems.push({
-                product: item.product,
-                amount: item.amount,
-                price: price
-            })
-            // Incrementar las ventas del producto
-            product.sales += item.amount
+            invoiceItems.push(
+                {
+                    product: item.product,
+                    amount: item.amount,
+                    price: price
+                }
+            )
+            product.stock -= item.amount //Resta los productos del stock 
+            product.sales += item.amount //Incrementar las ventas del producto
             await product.save() 
         }
 
         // Crear la factura
-        const invoice = new Invoice({
-            user: userId, 
-            products: invoiceItems, 
-            subTotal: cart.totalPrice,
-            total: (cart.totalPrice) + cart.totalPrice * 0.12 , 
-            date: new Date()  
-        })
+        const invoice = new Invoice(
+            {
+                user: userId, 
+                products: invoiceItems, 
+                subTotal: cart.totalPrice,
+                total: (cart.totalPrice) + cart.totalPrice * 0.12 , 
+                date: new Date()  
+            }
+        )
 
         // Guardar la factura
         await invoice.save()
