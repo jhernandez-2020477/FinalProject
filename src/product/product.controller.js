@@ -103,7 +103,7 @@ export const get = async(req, res)=>{
 //Actualizar Producto
 export const update = async(req, res) => {
     const { id } = req.params
-    const { category, ...data } = req.body // asumiendo que el id de la categoría se pasa en el body
+    const { category, ...data } = req.body 
     try {
         // Verificar si la categoría existe
         const categoryid = await Category.findById(category)
