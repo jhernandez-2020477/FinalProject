@@ -166,6 +166,7 @@ export const deleteUser = async (req, res) => {
 
         // Eliminar usuario
         userToDelete.status = false
+        await userToDelete.save()
         // await User.findByIdAndDelete(id)
 
         return res.send(
