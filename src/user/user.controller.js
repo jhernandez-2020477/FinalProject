@@ -165,7 +165,8 @@ export const deleteUser = async (req, res) => {
         }
 
         // Eliminar usuario
-        await User.findByIdAndDelete(id)
+        userToDelete.status = false
+        // await User.findByIdAndDelete(id)
 
         return res.send(
             {
