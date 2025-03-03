@@ -147,6 +147,16 @@ export const deleteCategory = async (req, res) => {
             )
         }
 
+        //Verificar que no sea la categoria por default
+        if(category.name === 'Category Default'){
+            return res.status(400).send(
+                {
+                    success: false,
+                    message: 'Cannot delete the Category Default'
+                }
+            )
+        }
+
         // Buscar la categoría por defecto
         let defaultCategory = await Category.findOne(
             { 
