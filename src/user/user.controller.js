@@ -248,7 +248,7 @@ export const updatePassword = async (req, res) => {
 }
 
 
-//Obtener todas las categorias
+//Obtener todas los usuarios
 export const getAll = async(req, res)=>{
     const { limit , skip } = req.query
     try {
