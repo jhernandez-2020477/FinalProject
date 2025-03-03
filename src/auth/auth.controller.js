@@ -87,6 +87,14 @@ export const login = async(req, res)=>{
                 ]
             }
         )
+        if(user.status === false){
+            return res.status(403).send(
+                {
+                    success: false,
+                    message: 'This account has been desactived or deleted'
+                }
+            )
+        }
         //Verificar que la contrasela coincida
         if(user && await checkPassword(user.password, password)){
             let loggerUser = {
