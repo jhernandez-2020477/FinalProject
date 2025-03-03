@@ -43,6 +43,12 @@ export const getAll = async(req, res)=>{
         const products = await Product.find()
             .skip(skip)
             .limit(limit)
+            .populate(
+                {
+                    path: 'category',
+                    select: 'name description -_id'
+                }
+            )
         if(products.length === 0) return res.status(400).send(
             {
                 success: false,
