@@ -34,6 +34,10 @@ const invoiceSchema = Schema(
             default: 0
             //required: [true, 'Total is required']
         },
+        status: {
+            type: String,
+            default: 'COMPLETE'
+        },
         date: {
             type: Date,
             default: Date.now
