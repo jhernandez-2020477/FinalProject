@@ -182,3 +182,81 @@ export const getInvoicesByUser = async (req, res) => {
     }
 }
 
+// Función para cancelar factura
+export const deleteInvoice = async (req, res) => {
+    try {
+        const { id } = req.params
+        const userId = req.user.uid
+
+        // Verificar si la factura es del usuario o si el usuario es admin
+        const invoice = await Invoice.findById(id)
+        if (!invoice) {
+            return res.status(404).send(
+                {
+                    success: false,
+                    message: 'Invoice not found.'
+                }
+            )
+        }
+
+        // Verificar si el usuario es admin o el propietario de la factura
+        if (invoice.user.toString() !== userId && req.user.role !== 'ADMIN') {
+            return res.status(403).send(
+                {
+                    success: false,
+                    message: 'You do not have permission to delete this invoice.'
+                }
+            )
+        }
+
+        //Veficiar si ya fue anulada
+        if(invoice.status === 'ANULLED'){
+            return res.status(403).send(
+                {
+                    success: false,
+                    message: 'This invoice has already been deleted.'
+                }
+            )
+        }
+
+        // Se obtienen los productos de la factura y actualizamos el stock y las ventas
+        for(const item of invoice.products){
+            const productFound = await Product.findById(item.product)
+            if(!productFound){
+                continue // Si no se encuentra el producto, se salta
+            }
+
+            // Devolver la cantidad al stock y disminuir las ventas
+            productFound.stock += item.amount
+            productFound.sales -= item.amount
+            await productFound.save()
+        }
+
+        // Limpiar la factura
+        invoice.products = []
+        invoice.subTotal = 0
+        invoice.total = 0
+
+        // Cambiar el estado de la factura a 'ANULLED'
+        invoice.status = 'ANULLED'
+        await invoice.save()
+
+        // Responder con el estado actualizado de la factura
+        return res.send(
+            {
+                success: true,
+                message: 'Invoice has been canceled successfully.',
+                invoice
+            }
+        )
+
+    } catch (err) {
+        console.error(err)
+        return res.status(500).send(
+            {
+                success: false,
+                message: 'Error when deleting this invoice. :('
+            }
+        )
+    }
+}

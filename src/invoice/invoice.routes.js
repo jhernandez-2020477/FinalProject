@@ -1,6 +1,6 @@
 //Rutas de autenticación
 import { Router } from "express";
-import { getInvoicesByUser, updateProductInInvoice } from "./invice.controller.js";
+import { deleteInvoice, getInvoicesByUser, updateProductInInvoice } from "./invice.controller.js";
 import { validateJwt } from "../../middlewares/validate.jwt.js";
 import { validUpdateInvoice } from "../../helpers/validators.js";
 
@@ -21,6 +21,14 @@ api.get(
         validateJwt
     ],
     getInvoicesByUser
+)
+
+api.delete(
+    '/:id',
+    [
+        validateJwt
+    ],
+    deleteInvoice
 )
 
 // Exportar
